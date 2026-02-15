@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TECHHIVE Uptime Monitor — Your Website. Always Watched.</title>
+<meta name="description" content="Professional uptime monitoring that alerts you instantly when your site goes down. Beautiful status pages, detailed reports, and peace of mind — starting free.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --primary:#FFFFFF;
+  --accent:#FFA500;
+  --accent-dim:rgba(255,165,0,0.15);
+  --accent-glow:rgba(255,165,0,0.4);
+  --background:#000000;
+  --card-bg:#0a0a0a;
+  --card-border:#1a1a1a;
+  --text:#FFFFFF;
+  --text-secondary:#888888;
+  --success:#00FF88;
+  --danger:#FF3366;
+  --warning:#FFAA00;
+  --font-display:'Outfit',system-ui,-apple-system,sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+  --section-gap:120px;
+  --container:1200px;
+}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{
+  background:var(--background);
+  color:var(--text);
+  font-family:var(--font-display);
+  line-height:1.6;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--accent);color:#000}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:#0a0a0a}
+::-webkit-scrollbar-thumb{background:var(--accent);border-radius:3px}
+
+.container{max-width:var(--container);margin:0 auto;padding:0 24px}
+
+/* ═══════════════════ NAVBAR ═══════════════════ */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  padding:16px 0;
+  background:rgba(0,0,0,0.6);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(255,165,0,0.08);
+  transition:all 0.4s ease;
+}
+.nav.scrolled{
+  padding:10px 0;
+  background:rgba(0,0,0,0.9);
+  border-bottom-color:rgba(255,165,0,0.15);
+}
+.nav-inner{
+  display:flex;align-items:center;justify-content:space-between;
+  max-width:var(--container);margin:0 auto;padding:0 24px;
+}
+.nav-brand{display:flex;align-items:center;gap:12px;text-decoration:none}
+.nav-brand svg{width:40px;height:40px;flex-shrink:0}
+.nav-brand span{
+  font-weight:800;font-size:1.1rem;letter-spacing:3px;
+  color:var(--text);
+  background:linear-gradient(135deg,#fff 0%,var(--accent) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.nav-links{display:flex;align-items:center;gap:32px;list-style:none}
+.nav-links a{
+  color:var(--text-secondary);text-decoration:none;font-size:0.9rem;
+  font-weight:500;letter-spacing:0.5px;
+  transition:color 0.3s;
+  position:relative;
+}
+.nav-links a::after{
+  content:'';position:absolute;bottom:-4px;left:0;right:0;
+  height:1px;background:var(--accent);
+  transform:scaleX(0);transform-origin:right;
+  transition:transform 0.3s ease;
+}
+.nav-links a:hover{color:var(--text)}
+.nav-links a:hover::after{transform:scaleX(1);transform-origin:left}
+.nav-cta{
+  background:linear-gradient(135deg,var(--accent) 0%,#e69500 100%);
+  color:#000;border:none;padding:10px 24px;border-radius:8px;
+  font-weight:700;font-size:0.85rem;cursor:pointer;
+  letter-spacing:0.5px;text-decoration:none;
+  transition:all 0.3s ease;
+  box-shadow:0 0 0 0 var(--accent-glow);
+}
+.nav-cta:hover{
+  transform:translateY(-1px);
+  box-shadow:0 4px 20px var(--accent-glow);
+}
+.nav-mobile{display:none;background:none;border:none;cursor:pointer;padding:8px}
+.nav-mobile span{display:block;width:24px;height:2px;background:var(--text);margin:5px 0;transition:0.3s}
+
+/* ═══════════════════ HERO ═══════════════════ */
+.hero{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+  padding:120px 24px 80px;
+}
+.hero-bg{
+  position:absolute;inset:0;z-index:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 40%,rgba(255,165,0,0.06) 0%,transparent 70%),
+    radial-gradient(circle at 20% 80%,rgba(255,165,0,0.03) 0%,transparent 40%),
+    radial-gradient(circle at 80% 20%,rgba(255,165,0,0.03) 0%,transparent 40%);
+}
+.hex-grid{
+  position:absolute;inset:0;z-index:0;opacity:0.04;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100'%3E%3Cpath d='M28 66L0 50 0 16 28 0 56 16 56 50z' fill='none' stroke='%23FFA500' stroke-width='0.5'/%3E%3Cpath d='M28 100L0 84 0 50 28 34 56 50 56 84z' fill='none' stroke='%23FFA500' stroke-width='0.5'/%3E%3C/svg%3E");
+  animation:hexDrift 60s linear infinite;
+}
+@keyframes hexDrift{from{transform:translateY(0)}to{transform:translateY(-100px)}}
+
+.hero-content{
+  position:relative;z-index:1;text-align:center;
+  max-width:800px;
+}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 16px;border-radius:100px;
+  border:1px solid rgba(255,165,0,0.2);
+  background:rgba(255,165,0,0.05);
+  font-family:var(--font-mono);font-size:0.75rem;
+  color:var(--accent);letter-spacing:1px;
+  margin-bottom:32px;
+  animation:fadeUp 0.8s ease both;
+}
+.hero-eyebrow .pulse{
+  width:6px;height:6px;border-radius:50%;background:var(--success);
+  animation:pulse 2s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(1.5)}}
+
+.hero h1{
+  font-size:clamp(2.8rem,6vw,5rem);
+  font-weight:900;line-height:1.05;
+  letter-spacing:-2px;
+  margin-bottom:24px;
+  animation:fadeUp 0.8s 0.1s ease both;
+}
+.hero h1 .accent{
+  background:linear-gradient(135deg,var(--accent) 0%,#FFD700 50%,var(--accent) 100%);
+  background-size:200% auto;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  animation:shimmer 4s linear infinite;
+}
+@keyframes shimmer{from{background-position:0% center}to{background-position:200% center}}
+
+.hero p{
+  font-size:clamp(1rem,2vw,1.25rem);
+  color:var(--text-secondary);
+  max-width:600px;margin:0 auto 40px;
+  line-height:1.7;font-weight:300;
+  animation:fadeUp 0.8s 0.2s ease both;
+}
+.hero-actions{
+  display:flex;gap:16px;justify-content:center;flex-wrap:wrap;
+  margin-bottom:40px;
+  animation:fadeUp 0.8s 0.3s ease both;
+}
+.btn-primary{
+  background:linear-gradient(135deg,var(--accent) 0%,#e69500 100%);
+  color:#000;border:none;padding:16px 36px;border-radius:12px;
+  font-weight:700;font-size:1rem;cursor:pointer;
+  text-decoration:none;display:inline-flex;align-items:center;gap:8px;
+  transition:all 0.3s ease;
+  box-shadow:0 0 0 0 var(--accent-glow),0 4px 16px rgba(255,165,0,0.2);
+  font-family:var(--font-display);
+}
+.btn-primary:hover{
+  transform:translateY(-2px);
+  box-shadow:0 0 30px var(--accent-glow),0 8px 32px rgba(255,165,0,0.3);
+}
+.btn-outline{
+  background:transparent;
+  color:var(--text);
+  border:1px solid var(--card-border);
+  padding:16px 36px;border-radius:12px;
+  font-weight:600;font-size:1rem;cursor:pointer;
+  text-decoration:none;display:inline-flex;align-items:center;gap:8px;
+  transition:all 0.3s ease;
+  font-family:var(--font-display);
+}
+.btn-outline:hover{
+  border-color:var(--accent);color:var(--accent);
+  transform:translateY(-2px);
+  box-shadow:0 4px 16px rgba(255,165,0,0.1);
+}
+.trust-badges{
+  display:flex;gap:24px;justify-content:center;flex-wrap:wrap;
+  animation:fadeUp 0.8s 0.4s ease both;
+}
+.trust-badges span{
+  font-size:0.85rem;color:var(--text-secondary);
+  display:flex;align-items:center;gap:6px;
+  font-weight:400;
+}
+.trust-badges .check{color:var(--success);font-weight:700}
+
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(24px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* ═══════════════════ SECTIONS ═══════════════════ */
+section{padding:var(--section-gap) 0}
+.section-label{
+  font-family:var(--font-mono);font-size:0.7rem;
+  color:var(--accent);letter-spacing:3px;text-transform:uppercase;
+  margin-bottom:16px;
+  display:flex;align-items:center;gap:12px;
+}
+.section-label::before{content:'';width:24px;height:1px;background:var(--accent)}
+.section-title{
+  font-size:clamp(2rem,4vw,3rem);font-weight:800;
+  letter-spacing:-1px;line-height:1.15;margin-bottom:16px;
+}
+.section-sub{
+  font-size:1.1rem;color:var(--text-secondary);
+  max-width:560px;font-weight:300;margin-bottom:64px;
+}
+.section-header{text-align:center}
+.section-header .section-label{justify-content:center}
+.section-header .section-label::before{display:none}
+.section-header .section-sub{margin-left:auto;margin-right:auto}
+
+/* ═══════════════════ HOW IT WORKS ═══════════════════ */
+.steps-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:24px;
+}
+.step-card{
+  background:var(--card-bg);
+  border:1px solid var(--card-border);
+  border-radius:16px;padding:40px 32px;
+  position:relative;overflow:hidden;
+  transition:all 0.4s ease;
+}
+.step-card:hover{
+  border-color:rgba(255,165,0,0.2);
+  transform:translateY(-4px);
+  box-shadow:0 12px 40px rgba(0,0,0,0.4);
+}
+.step-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--accent-dim),transparent);
+}
+.step-num{
+  width:48px;height:48px;border-radius:12px;
+  background:var(--accent-dim);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-mono);font-weight:700;font-size:1.1rem;
+  color:var(--accent);margin-bottom:24px;
+  border:1px solid rgba(255,165,0,0.15);
+}
+.step-card h3{font-size:1.25rem;font-weight:700;margin-bottom:12px}
+.step-card p{color:var(--text-secondary);font-size:0.95rem;line-height:1.7;font-weight:300}
+.step-connector{
+  display:none;
+  position:absolute;top:50%;right:-24px;
+  width:24px;height:1px;background:var(--card-border);
+}
+
+/* ═══════════════════ FEATURES ═══════════════════ */
+.features-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:24px;
+}
+.feature-card{
+  background:var(--card-bg);
+  border:1px solid var(--card-border);
+  border-radius:16px;padding:36px 28px;
+  transition:all 0.4s ease;
+  position:relative;
+}
+.feature-card:hover{
+  border-color:rgba(255,165,0,0.2);
+  transform:translateY(-4px);
+  box-shadow:0 12px 40px rgba(0,0,0,0.4);
+}
+.feature-icon{
+  width:44px;height:44px;border-radius:10px;
+  background:var(--accent-dim);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:20px;font-size:1.2rem;
+  border:1px solid rgba(255,165,0,0.1);
+}
+.feature-card h3{font-size:1.1rem;font-weight:700;margin-bottom:10px}
+.feature-card p{color:var(--text-secondary);font-size:0.9rem;line-height:1.7;font-weight:300}
+
+/* ═══════════════════ PRICING ═══════════════════ */
+.pricing-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:20px;
+  align-items:start;
+}
+.pricing-card{
+  background:var(--card-bg);
+  border:1px solid var(--card-border);
+  border-radius:20px;padding:36px 28px;
+  transition:all 0.4s ease;
+  position:relative;
+}
+.pricing-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 12px 40px rgba(0,0,0,0.5);
+}
+.pricing-card.popular{
+  border-color:var(--accent);
+  box-shadow:0 0 40px rgba(255,165,0,0.1);
+  transform:scale(1.03);
+}
+.pricing-card.popular:hover{
+  transform:scale(1.03) translateY(-4px);
+}
+.popular-badge{
+  position:absolute;top:-12px;left:50%;transform:translateX(-50%);
+  background:linear-gradient(135deg,var(--accent),#e69500);
+  color:#000;padding:4px 16px;border-radius:100px;
+  font-size:0.7rem;font-weight:700;letter-spacing:1px;
+  text-transform:uppercase;white-space:nowrap;
+}
+.pricing-tier{
+  font-size:0.85rem;font-weight:600;color:var(--text-secondary);
+  letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;
+}
+.pricing-price{
+  font-size:2.8rem;font-weight:900;letter-spacing:-2px;
+  margin-bottom:4px;line-height:1;
+}
+.pricing-price span{font-size:1rem;font-weight:400;color:var(--text-secondary);letter-spacing:0}
+.pricing-desc{
+  font-size:0.85rem;color:var(--text-secondary);
+  margin-bottom:24px;padding-bottom:24px;
+  border-bottom:1px solid var(--card-border);
+  font-weight:300;
+}
+.pricing-features{list-style:none;margin-bottom:32px}
+.pricing-features li{
+  display:flex;align-items:center;gap:10px;
+  padding:8px 0;font-size:0.88rem;
+  color:var(--text-secondary);font-weight:400;
+}
+.pricing-features li .icon{font-size:0.8rem;width:20px;text-align:center;flex-shrink:0}
+.pricing-features li .icon.yes{color:var(--success)}
+.pricing-features li .icon.no{color:#333}
+.pricing-features li.disabled{color:#444}
+.pricing-btn{
+  width:100%;padding:14px;border-radius:10px;
+  font-weight:700;font-size:0.9rem;cursor:pointer;
+  text-align:center;text-decoration:none;display:block;
+  transition:all 0.3s ease;
+  font-family:var(--font-display);
+  border:1px solid var(--card-border);
+  background:transparent;color:var(--text);
+}
+.pricing-btn:hover{
+  border-color:var(--accent);color:var(--accent);
+  box-shadow:0 4px 16px rgba(255,165,0,0.1);
+}
+.pricing-card.popular .pricing-btn{
+  background:linear-gradient(135deg,var(--accent),#e69500);
+  color:#000;border-color:transparent;
+}
+.pricing-card.popular .pricing-btn:hover{
+  box-shadow:0 4px 24px var(--accent-glow);
+  transform:translateY(-1px);
+}
+
+/* ═══════════════════ ONBOARDING ═══════════════════ */
+.onboard-section{
+  background:linear-gradient(180deg,transparent 0%,rgba(255,165,0,0.02) 50%,transparent 100%);
+}
+.onboard-wrapper{
+  max-width:560px;margin:0 auto;
+  background:var(--card-bg);
+  border:1px solid var(--card-border);
+  border-radius:20px;padding:48px 40px;
+  position:relative;
+}
+.onboard-wrapper::before{
+  content:'';position:absolute;top:0;left:20%;right:20%;height:1px;
+  background:linear-gradient(90deg,transparent,var(--accent),transparent);
+}
+.onboard-wrapper h2{
+  font-size:1.8rem;font-weight:800;text-align:center;
+  margin-bottom:8px;letter-spacing:-0.5px;
+}
+.onboard-wrapper .sub{
+  text-align:center;color:var(--text-secondary);
+  margin-bottom:32px;font-size:0.95rem;font-weight:300;
+}
+.form-group{margin-bottom:20px}
+.form-group label{
+  display:block;font-size:0.8rem;font-weight:600;
+  color:var(--text-secondary);margin-bottom:6px;
+  letter-spacing:0.5px;text-transform:uppercase;
+}
+.form-group input,.form-group select{
+  width:100%;padding:14px 16px;
+  background:#050505;border:1px solid var(--card-border);
+  border-radius:10px;color:var(--text);
+  font-family:var(--font-display);font-size:0.95rem;
+  transition:all 0.3s ease;
+  outline:none;
+}
+.form-group input:focus,.form-group select:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px var(--accent-dim);
+}
+.form-group input::placeholder{color:#444}
+.form-group select{cursor:pointer;appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23888' stroke-width='1.5'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 16px center;
+}
+.form-group select option{background:#0a0a0a;color:#fff}
+.submit-btn{
+  width:100%;padding:16px;border:none;border-radius:10px;
+  background:linear-gradient(135deg,var(--accent),#e69500);
+  color:#000;font-weight:700;font-size:1rem;
+  cursor:pointer;transition:all 0.3s ease;
+  font-family:var(--font-display);
+  box-shadow:0 4px 16px rgba(255,165,0,0.2);
+}
+.submit-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 32px rgba(255,165,0,0.3);
+}
+.submit-btn:disabled{opacity:0.6;cursor:not-allowed;transform:none}
+.form-msg{
+  text-align:center;margin-top:16px;padding:12px;
+  border-radius:8px;font-size:0.9rem;font-weight:500;
+  display:none;
+}
+.form-msg.success{
+  display:block;
+  background:rgba(0,255,136,0.08);
+  border:1px solid rgba(0,255,136,0.2);
+  color:var(--success);
+}
+.form-msg.error{
+  display:block;
+  background:rgba(255,51,102,0.08);
+  border:1px solid rgba(255,51,102,0.2);
+  color:var(--danger);
+}
+
+/* ═══════════════════ FAQ ═══════════════════ */
+.faq-list{max-width:720px;margin:0 auto}
+.faq-item{
+  border-bottom:1px solid var(--card-border);
+}
+.faq-q{
+  width:100%;background:none;border:none;
+  padding:24px 0;text-align:left;cursor:pointer;
+  color:var(--text);font-size:1.05rem;font-weight:600;
+  display:flex;justify-content:space-between;align-items:center;
+  font-family:var(--font-display);
+  transition:color 0.3s;
+}
+.faq-q:hover{color:var(--accent)}
+.faq-q .arrow{
+  font-size:1.2rem;transition:transform 0.3s ease;
+  color:var(--text-secondary);flex-shrink:0;margin-left:16px;
+}
+.faq-item.open .faq-q .arrow{transform:rotate(45deg);color:var(--accent)}
+.faq-a{
+  max-height:0;overflow:hidden;
+  transition:max-height 0.4s ease,padding 0.4s ease;
+}
+.faq-item.open .faq-a{max-height:200px;padding-bottom:24px}
+.faq-a p{
+  color:var(--text-secondary);font-size:0.95rem;
+  line-height:1.8;font-weight:300;
+}
+
+/* ═══════════════════ FOOTER ═══════════════════ */
+.footer{
+  padding:60px 0 32px;
+  border-top:1px solid var(--card-border);
+  margin-top:40px;
+}
+.footer-inner{
+  display:flex;justify-content:space-between;align-items:start;
+  flex-wrap:wrap;gap:32px;
+  margin-bottom:40px;
+}
+.footer-brand{max-width:320px}
+.footer-brand .nav-brand{margin-bottom:12px}
+.footer-brand p{color:var(--text-secondary);font-size:0.9rem;font-weight:300;line-height:1.7}
+.footer-links{display:flex;gap:48px}
+.footer-links-col h4{
+  font-size:0.75rem;font-weight:600;
+  color:var(--text-secondary);letter-spacing:1px;
+  text-transform:uppercase;margin-bottom:12px;
+}
+.footer-links-col a{
+  display:block;color:var(--text-secondary);
+  text-decoration:none;font-size:0.9rem;
+  padding:4px 0;transition:color 0.3s;font-weight:400;
+}
+.footer-links-col a:hover{color:var(--accent)}
+.footer-bottom{
+  display:flex;justify-content:space-between;align-items:center;
+  padding-top:24px;border-top:1px solid var(--card-border);
+  flex-wrap:wrap;gap:12px;
+}
+.footer-bottom p{color:#555;font-size:0.8rem}
+.footer-status{
+  display:flex;align-items:center;gap:6px;
+  font-size:0.8rem;color:var(--success);
+}
+.footer-status .dot{
+  width:6px;height:6px;border-radius:50%;background:var(--success);
+  animation:pulse 2s ease-in-out infinite;
+}
+
+/* ═══════════════════ SCROLL REVEAL ═══════════════════ */
+.reveal{opacity:0;transform:translateY(32px);transition:all 0.7s cubic-bezier(0.16,1,0.3,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-delay-1{transition-delay:0.1s}
+.reveal-delay-2{transition-delay:0.2s}
+.reveal-delay-3{transition-delay:0.3s}
+.reveal-delay-4{transition-delay:0.4s}
+.reveal-delay-5{transition-delay:0.5s}
+
+/* ═══════════════════ RESPONSIVE ═══════════════════ */
+@media(max-width:1024px){
+  .pricing-grid{grid-template-columns:repeat(2,1fr)}
+  .pricing-card.popular{transform:scale(1)}
+  .pricing-card.popular:hover{transform:translateY(-4px)}
+}
+@media(max-width:768px){
+  :root{--section-gap:80px}
+  .nav-links{
+    display:none;position:fixed;
+    top:0;left:0;right:0;bottom:0;
+    background:rgba(0,0,0,0.97);
+    flex-direction:column;justify-content:center;align-items:center;
+    gap:32px;
+  }
+  .nav-links.open{display:flex}
+  .nav-links a{font-size:1.2rem}
+  .nav-mobile{display:block;z-index:1001}
+  .steps-grid{grid-template-columns:1fr}
+  .features-grid{grid-template-columns:1fr}
+  .pricing-grid{grid-template-columns:1fr;max-width:400px;margin:0 auto}
+  .hero h1{letter-spacing:-1px}
+  .onboard-wrapper{padding:32px 24px}
+  .footer-inner{flex-direction:column}
+  .footer-links{flex-direction:column;gap:24px}
+  .trust-badges{flex-direction:column;gap:8px;align-items:center}
+}
+@media(max-width:480px){
+  .hero-actions{flex-direction:column;align-items:stretch}
+  .btn-primary,.btn-outline{justify-content:center}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ NAVBAR ═══════════════════ -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-brand">
+      <svg viewBox="0 0 100 100" width="40" height="40">
+        <polygon points="50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5" fill="none" stroke="#FFA500" stroke-width="2"/>
+        <polygon points="50,15 80,32.5 80,67.5 50,85 20,67.5 20,32.5" fill="none" stroke="#FFA500" stroke-width="1.5"/>
+        <circle cx="50" cy="38" r="8" fill="#FFA500"/>
+        <circle cx="38" cy="33" r="4" fill="#FFA500"/>
+        <circle cx="62" cy="33" r="4" fill="#FFA500"/>
+        <ellipse cx="50" cy="55" rx="15" ry="20" fill="#FFA500"/>
+        <rect x="35" y="48" width="30" height="2.5" fill="#000"/>
+        <rect x="35" y="54" width="30" height="2.5" fill="#000"/>
+        <rect x="35" y="60" width="30" height="2.5" fill="#000"/>
+        <ellipse cx="32" cy="48" rx="10" ry="14" fill="rgba(255,255,255,0.3)" stroke="#FFA500" stroke-width="0.8"/>
+        <ellipse cx="68" cy="48" rx="10" ry="14" fill="rgba(255,255,255,0.3)" stroke="#FFA500" stroke-width="0.8"/>
+      </svg>
+      <span>TECHHIVE</span>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a href="#onboard" class="nav-cta">Get Started</a></li>
+    </ul>
+    <button class="nav-mobile" id="navToggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ═══════════════════ HERO ═══════════════════ -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hex-grid"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <span class="pulse"></span>
+      MONITORING ACTIVE
+    </div>
+    <h1>Your Website.<br><span class="accent">Always Watched.</span></h1>
+    <p>Professional uptime monitoring that alerts you instantly when your site goes down. Beautiful status pages, detailed reports, and peace of mind — starting free.</p>
+    <div class="hero-actions">
+      <a href="#onboard" class="btn-primary">
+        Start Monitoring Free
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a href="#pricing" class="btn-outline">View Pricing</a>
+    </div>
+    <div class="trust-badges">
+      <span><span class="check">&#10003;</span> No credit card required</span>
+      <span><span class="check">&#10003;</span> 1-minute setup</span>
+      <span><span class="check">&#10003;</span> Instant alerts</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ HOW IT WORKS ═══════════════════ -->
+<section id="how">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">How It Works</div>
+      <h2 class="section-title reveal">Three Steps to Peace of Mind</h2>
+      <p class="section-sub reveal reveal-delay-1">Get started in under a minute. No technical knowledge required.</p>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card reveal reveal-delay-1">
+        <div class="step-num">01</div>
+        <h3>Add Your Site</h3>
+        <p>Enter your URL and we start monitoring immediately. No complex setup, no code changes, no agents to install.</p>
+      </div>
+      <div class="step-card reveal reveal-delay-2">
+        <div class="step-num">02</div>
+        <h3>We Monitor 24/7</h3>
+        <p>Our systems check your website around the clock. Every minute, every hour, every day — so you don't have to.</p>
+      </div>
+      <div class="step-card reveal reveal-delay-3">
+        <div class="step-num">03</div>
+        <h3>Get Instant Alerts</h3>
+        <p>The moment your site goes down, you know. Email, Discord, or both — your choice. Recovery alerts included.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ FEATURES ═══════════════════ -->
+<section id="features">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">Features</div>
+      <h2 class="section-title reveal">Everything You Need to Stay Online</h2>
+      <p class="section-sub reveal reveal-delay-1">Powerful monitoring tools built for teams and solo developers alike.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card reveal reveal-delay-1">
+        <div class="feature-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="#FFA500" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Instant Alerts</h3>
+        <p>Get notified via email or Discord within seconds of downtime. Never miss an outage again.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-2">
+        <div class="feature-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="3" stroke="#FFA500" stroke-width="1.5"/><path d="M8 12h8M8 8h8M8 16h4" stroke="#FFA500" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Status Pages</h3>
+        <p>Give your customers a beautiful, branded status page showing real-time uptime data.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-3">
+        <div class="feature-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 3v18h18" stroke="#FFA500" stroke-width="1.5" stroke-linecap="round"/><path d="M7 16l4-6 4 4 5-8" stroke="#FFA500" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Uptime Reports</h3>
+        <p>Weekly and monthly reports with response times, uptime percentages, and incident history.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-1">
+        <div class="feature-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#FFA500" stroke-width="1.5"/><path d="M12 8v4l3 2" stroke="#FFA500" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Multi-Protocol</h3>
+        <p>Monitor HTTP, HTTPS, TCP, and more. We check what matters to your business.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-2">
+        <div class="feature-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h10" stroke="#FFA500" stroke-width="1.5" stroke-linecap="round"/><circle cx="19" cy="18" r="3" stroke="#FFA500" stroke-width="1.5"/></svg>
+        </div>
+        <h3>API Access</h3>
+        <p>Integrate monitoring data into your own tools and dashboards with our REST API.</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-3">
+        <div class="feature-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5z" stroke="#FFA500" stroke-width="1.5" stroke-linejoin="round"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke="#FFA500" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Custom Branding</h3>
+        <p>White-label status pages with your logo and colors. Your brand, our infrastructure.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ PRICING ═══════════════════ -->
+<section id="pricing">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">Pricing</div>
+      <h2 class="section-title reveal">Simple, Honest Pricing</h2>
+      <p class="section-sub reveal reveal-delay-1">Start free. Upgrade when you're ready. No hidden fees, no surprises.</p>
+    </div>
+    <div class="pricing-grid">
+      <!-- FREE -->
+      <div class="pricing-card reveal reveal-delay-1">
+        <div class="pricing-tier">Free</div>
+        <div class="pricing-price">$0<span>/mo</span></div>
+        <div class="pricing-desc">Perfect for personal projects and portfolios.</div>
+        <ul class="pricing-features">
+          <li><span class="icon yes">&#10003;</span>1 website monitor</li>
+          <li><span class="icon yes">&#10003;</span>15-minute checks</li>
+          <li><span class="icon yes">&#10003;</span>Discord alerts</li>
+          <li class="disabled"><span class="icon no">&#10005;</span>Email alerts</li>
+          <li class="disabled"><span class="icon no">&#10005;</span>Status page</li>
+          <li class="disabled"><span class="icon no">&#10005;</span>Weekly reports</li>
+          <li class="disabled"><span class="icon no">&#10005;</span>API access</li>
+        </ul>
+        <a href="#onboard" class="pricing-btn">Start Free</a>
+      </div>
+      <!-- STARTER -->
+      <div class="pricing-card reveal reveal-delay-2">
+        <div class="pricing-tier">Starter</div>
+        <div class="pricing-price">$3<span>/mo</span></div>
+        <div class="pricing-desc">For freelancers managing client websites.</div>
+        <ul class="pricing-features">
+          <li><span class="icon yes">&#10003;</span>3 website monitors</li>
+          <li><span class="icon yes">&#10003;</span>5-minute checks</li>
+          <li><span class="icon yes">&#10003;</span>Discord alerts</li>
+          <li><span class="icon yes">&#10003;</span>Email alerts</li>
+          <li class="disabled"><span class="icon no">&#10005;</span>Status page</li>
+          <li><span class="icon yes">&#10003;</span>Weekly reports</li>
+          <li class="disabled"><span class="icon no">&#10005;</span>API access</li>
+        </ul>
+        <a href="#stripe-starter" class="pricing-btn">Get Starter</a>
+      </div>
+      <!-- PRO -->
+      <div class="pricing-card popular reveal reveal-delay-3">
+        <div class="popular-badge">Most Popular</div>
+        <div class="pricing-tier">Pro</div>
+        <div class="pricing-price">$9<span>/mo</span></div>
+        <div class="pricing-desc">For growing teams that need visibility.</div>
+        <ul class="pricing-features">
+          <li><span class="icon yes">&#10003;</span>10 website monitors</li>
+          <li><span class="icon yes">&#10003;</span>3-minute checks</li>
+          <li><span class="icon yes">&#10003;</span>Discord alerts</li>
+          <li><span class="icon yes">&#10003;</span>Email alerts</li>
+          <li><span class="icon yes">&#10003;</span>Status page</li>
+          <li><span class="icon yes">&#10003;</span>Weekly + monthly reports</li>
+          <li class="disabled"><span class="icon no">&#10005;</span>API access</li>
+        </ul>
+        <a href="#stripe-pro" class="pricing-btn">Get Pro</a>
+      </div>
+      <!-- BUSINESS -->
+      <div class="pricing-card reveal reveal-delay-4">
+        <div class="pricing-tier">Business</div>
+        <div class="pricing-price">$19<span>/mo</span></div>
+        <div class="pricing-desc">For businesses that can't afford downtime.</div>
+        <ul class="pricing-features">
+          <li><span class="icon yes">&#10003;</span>25 website monitors</li>
+          <li><span class="icon yes">&#10003;</span>1-minute checks</li>
+          <li><span class="icon yes">&#10003;</span>Discord alerts</li>
+          <li><span class="icon yes">&#10003;</span>Email alerts</li>
+          <li><span class="icon yes">&#10003;</span>Custom status page</li>
+          <li><span class="icon yes">&#10003;</span>All reports + API access</li>
+          <li><span class="icon yes">&#10003;</span>Priority support</li>
+        </ul>
+        <a href="#stripe-business" class="pricing-btn">Get Business</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ ONBOARDING ═══════════════════ -->
+<section id="onboard" class="onboard-section">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">Get Started</div>
+    </div>
+    <div class="onboard-wrapper reveal">
+      <h2>Start Monitoring in 60 Seconds</h2>
+      <p class="sub">Enter your details below and we'll begin watching your site immediately.</p>
+      <form id="onboardForm" autocomplete="off">
+        <div class="form-group">
+          <label for="ob-name">Your Name</label>
+          <input type="text" id="ob-name" name="name" placeholder="Jane Smith" required>
+        </div>
+        <div class="form-group">
+          <label for="ob-url">Website URL</label>
+          <input type="url" id="ob-url" name="url" placeholder="https://example.com" required>
+        </div>
+        <div class="form-group">
+          <label for="ob-email">Email Address</label>
+          <input type="email" id="ob-email" name="email" placeholder="jane@example.com" required>
+        </div>
+        <div class="form-group">
+          <label for="ob-tier">Plan</label>
+          <select id="ob-tier" name="tier">
+            <option value="free" selected>Free — $0/mo</option>
+            <option value="starter">Starter — $3/mo</option>
+            <option value="pro">Pro — $9/mo</option>
+            <option value="business">Business — $19/mo</option>
+          </select>
+        </div>
+        <button type="submit" class="submit-btn" id="submitBtn">Start Monitoring</button>
+        <div id="formMsg" class="form-msg"></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ FAQ ═══════════════════ -->
+<section id="faq">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">FAQ</div>
+      <h2 class="section-title reveal">Common Questions</h2>
+      <p class="section-sub reveal reveal-delay-1">Everything you need to know before getting started.</p>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item reveal reveal-delay-1">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          How quickly will I be alerted?
+          <span class="arrow">+</span>
+        </button>
+        <div class="faq-a">
+          <p>Within seconds of detecting downtime. We check your site at the interval specified by your plan and send alerts immediately via your chosen channel.</p>
+        </div>
+      </div>
+      <div class="faq-item reveal reveal-delay-2">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          What happens if my site goes down?
+          <span class="arrow">+</span>
+        </button>
+        <div class="faq-a">
+          <p>You'll receive an instant notification via email and/or Discord. When your site comes back online, we'll notify you of the recovery too.</p>
+        </div>
+      </div>
+      <div class="faq-item reveal reveal-delay-3">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Can I upgrade or downgrade my plan?
+          <span class="arrow">+</span>
+        </button>
+        <div class="faq-a">
+          <p>Absolutely. You can change your plan at any time. Upgrades take effect immediately, and downgrades apply at the start of your next billing cycle.</p>
+        </div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Do you offer refunds?
+          <span class="arrow">+</span>
+        </button>
+        <div class="faq-a">
+          <p>Yes. If you're not satisfied within the first 14 days, we'll refund your payment — no questions asked.</p>
+        </div>
+      </div>
+      <div class="faq-item reveal reveal-delay-1">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          How do status pages work?
+          <span class="arrow">+</span>
+        </button>
+        <div class="faq-a">
+          <p>Pro and Business plans include a public status page for your website. Share the URL with your customers so they can check your service status anytime.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ FOOTER ═══════════════════ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a href="#" class="nav-brand">
+          <svg viewBox="0 0 100 100" width="36" height="36">
+            <polygon points="50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5" fill="none" stroke="#FFA500" stroke-width="2"/>
+            <polygon points="50,15 80,32.5 80,67.5 50,85 20,67.5 20,32.5" fill="none" stroke="#FFA500" stroke-width="1.5"/>
+            <circle cx="50" cy="38" r="8" fill="#FFA500"/><circle cx="38" cy="33" r="4" fill="#FFA500"/><circle cx="62" cy="33" r="4" fill="#FFA500"/>
+            <ellipse cx="50" cy="55" rx="15" ry="20" fill="#FFA500"/>
+            <rect x="35" y="48" width="30" height="2.5" fill="#000"/><rect x="35" y="54" width="30" height="2.5" fill="#000"/><rect x="35" y="60" width="30" height="2.5" fill="#000"/>
+            <ellipse cx="32" cy="48" rx="10" ry="14" fill="rgba(255,255,255,0.3)" stroke="#FFA500" stroke-width="0.8"/>
+            <ellipse cx="68" cy="48" rx="10" ry="14" fill="rgba(255,255,255,0.3)" stroke="#FFA500" stroke-width="0.8"/>
+          </svg>
+          <span>TECHHIVE</span>
+        </a>
+        <p>Professional uptime monitoring made affordable. Know the moment your site goes down — and be the first to fix it.</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-links-col">
+          <h4>Product</h4>
+          <a href="#features">Features</a>
+          <a href="#pricing">Pricing</a>
+          <a href="#faq">FAQ</a>
+        </div>
+        <div class="footer-links-col">
+          <h4>Get Started</h4>
+          <a href="#onboard">Free Plan</a>
+          <a href="#stripe-starter">Starter Plan</a>
+          <a href="#stripe-pro">Pro Plan</a>
+          <a href="#stripe-business">Business Plan</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 TECHHIVE. All rights reserved.</p>
+      <div class="footer-status">
+        <span class="dot"></span>
+        All systems operational
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ═══════════════════ NAV SCROLL ═══════════════════
+const nav = document.getElementById('nav');
+let lastScroll = 0;
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 60);
+}, { passive: true });
+
+// ═══════════════════ MOBILE NAV ═══════════════════
+const navToggle = document.getElementById('navToggle');
+const navLinks = document.getElementById('navLinks');
+navToggle.addEventListener('click', () => {
+  navLinks.classList.toggle('open');
+  const spans = navToggle.querySelectorAll('span');
+  if (navLinks.classList.contains('open')) {
+    spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+    spans[1].style.opacity = '0';
+    spans[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
+  } else {
+    spans[0].style.transform = '';
+    spans[1].style.opacity = '';
+    spans[2].style.transform = '';
+  }
+});
+navLinks.querySelectorAll('a').forEach(a => {
+  a.addEventListener('click', () => {
+    navLinks.classList.remove('open');
+    const spans = navToggle.querySelectorAll('span');
+    spans[0].style.transform = '';
+    spans[1].style.opacity = '';
+    spans[2].style.transform = '';
+  });
+});
+
+// ═══════════════════ FAQ ACCORDION ═══════════════════
+function toggleFaq(btn) {
+  const item = btn.parentElement;
+  const wasOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+  if (!wasOpen) item.classList.add('open');
+}
+
+// ═══════════════════ SCROLL REVEAL ═══════════════════
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// ═══════════════════ ONBOARDING FORM ═══════════════════
+const form = document.getElementById('onboardForm');
+const formMsg = document.getElementById('formMsg');
+const submitBtn = document.getElementById('submitBtn');
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  formMsg.className = 'form-msg';
+  formMsg.style.display = 'none';
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Setting up...';
+
+  const data = {
+    name: document.getElementById('ob-name').value.trim(),
+    url: document.getElementById('ob-url').value.trim(),
+    email: document.getElementById('ob-email').value.trim(),
+    tier: document.getElementById('ob-tier').value
+  };
+
+  if (!data.name || !data.url || !data.email) {
+    showMsg('Please fill in all fields.', 'error');
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Start Monitoring';
+    return;
+  }
+
+  try {
+    const res = await fetch('http://192.168.1.65:8890/api/onboard', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    const result = await res.json();
+    if (res.ok && result.status === 'ok') {
+      showMsg("You're all set! We'll start monitoring your site immediately.", 'success');
+      form.reset();
+    } else {
+      showMsg(result.error || 'Something went wrong. Please try again.', 'error');
+    }
+  } catch (err) {
+    showMsg('Unable to connect. Please try again later.', 'error');
+  }
+  submitBtn.disabled = false;
+  submitBtn.textContent = 'Start Monitoring';
+});
+
+function showMsg(text, type) {
+  formMsg.textContent = text;
+  formMsg.className = 'form-msg ' + type;
+}
+</script>
+</body>
+</html>
