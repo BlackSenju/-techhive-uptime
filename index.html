@@ -1004,7 +1004,7 @@ form.addEventListener('submit', async (e) => {
   }
 
   try {
-    const res = await fetch('http://192.168.1.65:8890/api/onboard', {
+    const res = await fetch('https://api.techhiveuptime.com/api/onboard', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
